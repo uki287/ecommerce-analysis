@@ -1,0 +1,60 @@
+// ============================================================
+// 快速版图表的辅助列/度量值
+// 1) 图 4 气泡图：迟到率分组（计算列，不是度量值）
+// 2) 图 10 雷达图：5 个归一化度量值
+// 3) 图 8 Cohort：留存率矩阵度量值
+// ============================================================
+
+// ---------- 1. 图 4：在 category_kpis_zh 表上新建计算列 ----------
+// 不要建成度量值；这是“计算列”。
+迟到率分组 =
+SWITCH (
+    TRUE (),
+    'category_kpis_zh'[迟到率] < 0.05, "低于5%",
+    'category_kpis_zh'[迟到率] < 0.08, "5%-8%",
+    'category_kpis_zh'[迟到率] < 0.11, "8%-11%",
+    "11%以上"
+)
+
+// 可选：给气泡图做“有效订单数 ≥ 30”的视觉筛选，不需要额外列。
+
+// ---------- 2. 图 10：在 state_kpis_zh 上新建度量值 ----------
+// 归一化到 0–1；雷达图字段放这 5 个度量值。
+州_GMV归一 =
+DIVIDE (
+    MAX ( 'state_kpis_zh'[商品GMV] ),
+    CALCULATE ( MAX ( 'state_kpis_zh'[商品GMV] ), ALL ( 'state_kpis_zh' ) )
+)
+
+州_客单价归一 =
+DIVIDE (
+    MAX ( 'state_kpis_zh'[客单价] ),
+    CALCULATE ( MAX ( 'state_kpis_zh'[客单价] ), ALL ( 'state_kpis_zh' ) )
+)
+
+州_评分归一 =
+DIVIDE ( MAX ( 'state_kpis_zh'[评论分] ), 5 )
+
+州_准时率 =
+MAX ( 'state_kpis_zh'[准时率] )
+
+州_复购率归一 =
+DIVIDE (
+    MAX ( 'state_kpis_zh'[复购客户率] ),
+    CALCULATE ( MAX ( 'state_kpis_zh'[复购客户率] ), ALL ( 'state_kpis_zh' ) )
+)
+
+// ---------- 3. 图 8：Cohort 长表（cohort_retention_zh） ----------
+// 矩阵的值可以直接放“留存率”列；如果 Power BI 自动求和，改用下面度量值。
+Cohort_留存率 =
+AVERAGE ( 'cohort_retention_zh'[留存率] )
+
+Cohort_客户数 =
+SUM ( 'cohort_retention_zh'[客户数] )
+
+// 可选：图 6 用预聚合配送表时
+配送_订单数 =
+SUM ( 'delivery_distribution_zh'[订单数] )
+
+// 可选：图 9 的累计占比列已在 seller_kpis_zh 中，不需要 DAX。
+// 如果要做动态 TOP N 累计，可后续再加 RANKX；本包使用静态前 100 名。

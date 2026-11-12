@@ -1,0 +1,43 @@
+{
+  "name": "Olist 中文报表主题",
+  "dataColors": [
+    "#1F4E79",
+    "#2A9D8F",
+    "#F4A261",
+    "#E76F51",
+    "#8E7DBE",
+    "#E9C46A",
+    "#4C9F70",
+    "#6C757D"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#1F2937",
+  "tableAccent": "#1F4E79",
+  "good": "#2A9D8F",
+  "neutral": "#E9C46A",
+  "bad": "#E76F51",
+  "maximum": "#1F4E79",
+  "minimum": "#E76F51",
+  "textClasses": {
+    "callout": {
+      "fontSize": 24,
+      "fontFace": "Microsoft YaHei",
+      "color": "#1F4E79"
+    },
+    "title": {
+      "fontSize": 16,
+      "fontFace": "Microsoft YaHei",
+      "color": "#1F2937"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Microsoft YaHei",
+      "color": "#1F2937"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Microsoft YaHei",
+      "color": "#4B5563"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+﻿图号,图表,视觉对象,数据表,字段井,字段/度量值,筛选/排序,备注
+1,月度 GMV + 订单,折线和簇状柱形图,monthly_kpis_zh,X 轴；列 Y；行 Y,月份（或年月文本）；商品GMV；有效订单数,按月份排序；次坐标轴,线=有效订单数
+2,品类 Top 10,簇状条形图,category_kpis_zh,Y 轴；X 轴,品类；商品GMV,Top N 10 by 商品GMV；降序,不要用 DAX 过滤表
+3,支付构成,环形图,payment_type_kpis_zh,图例；值,支付方式；支付金额,按支付金额降序,不要用订单占比
+4,品类气泡,散点图,category_kpis_zh,X；Y；大小；详细信息；图例,商品GMV；评论分；有效订单数；品类；迟到率分组,有效订单数>=30；对数X轴,迟到率分组需计算列
+5,州级地图,地图/着色地图,state_kpis_zh,位置；纬度；经度；大小；颜色饱和度,州；客户纬度；客户经度；商品GMV；迟到率,州数据类别=州或省,地图不可用时用经纬度散点
+6,送达分布,簇状柱形图,delivery_distribution_zh,X 轴；Y 轴,送达时长区间；订单数,自定义区间排序,真直方图用 orders_master_zh 分箱
+7,品类箱线图,图像(PNG),png/07_category_boxplot.png,—,—,Top 6 品类,静态；可选 Box and Whisker 自定义视觉
+8,Cohort 留存,矩阵,cohort_retention_zh,行；列；值,首购月份；距首购月数；留存率,只保留1-12月；条件格式,长表，无需逆透视
+9,卖家帕累托,折线和簇状柱形图,seller_kpis_zh,X 轴；列 Y；行 Y,卖家排名；商品GMV；累计GMV占比,卖家排名<=100；80%参考线,次坐标轴0-100%
+10,州雷达图,图像(PNG),png/10_state_radar.png,—,—,Top 5 州,静态；可选 Radar Chart 自定义视觉

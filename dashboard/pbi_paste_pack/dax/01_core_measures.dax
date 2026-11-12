@@ -1,0 +1,90 @@
+// ============================================================
+// Olist 核心度量值（快速版，基于预聚合中文表）
+// 使用方式：Power BI → 右键任意表 → 新建度量值 → 逐条粘贴
+// 如果你的表名不是 monthly_kpis_zh，请全局替换成实际表名
+// ============================================================
+
+// 1. 规模
+核心_有效订单数 =
+SUM ( 'monthly_kpis_zh'[有效订单数] )
+
+核心_商品GMV =
+SUM ( 'monthly_kpis_zh'[商品GMV] )
+
+核心_含运费订单总额 =
+SUM ( 'monthly_kpis_zh'[含运费订单总额] )
+
+核心_支付金额 =
+SUM ( 'payment_type_kpis_zh'[支付金额] )
+
+核心_客户数 =
+SUM ( 'state_kpis_zh'[客户数] )
+
+// 2. 客单与结构
+核心_客单价 =
+DIVIDE ( [核心_含运费订单总额], [核心_有效订单数] )
+
+核心_平均每单件数 =
+DIVIDE ( SUM ( 'monthly_kpis_zh'[商品件数] ), [核心_有效订单数] )
+
+核心_运费占比 =
+DIVIDE ( SUM ( 'monthly_kpis_zh'[运费] ), [核心_含运费订单总额] )
+
+// 3. 履约与体验（注意：迟到率分母是有送达日期的订单）
+核心_迟到率 =
+DIVIDE (
+    SUM ( 'monthly_kpis_zh'[迟到订单数] ),
+    SUM ( 'monthly_kpis_zh'[有送达日期订单数] )
+)
+
+核心_准时率 =
+1 - [核心_迟到率]
+
+核心_平均送达天数 =
+DIVIDE (
+    SUMX (
+        'monthly_kpis_zh',
+        'monthly_kpis_zh'[平均送达天数] * 'monthly_kpis_zh'[有送达日期订单数]
+    ),
+    SUM ( 'monthly_kpis_zh'[有送达日期订单数] )
+)
+
+// 4. 评论
+核心_平均评论分 =
+DIVIDE (
+    SUMX (
+        'monthly_kpis_zh',
+        'monthly_kpis_zh'[评论分] * 'monthly_kpis_zh'[评论数]
+    ),
+    SUM ( 'monthly_kpis_zh'[评论数] )
+)
+
+核心_评论覆盖率 =
+DIVIDE ( SUM ( 'monthly_kpis_zh'[评论数] ), [核心_有效订单数] )
+
+核心_差评率 =
+DIVIDE (
+    SUM ( 'monthly_kpis_zh'[差评订单数（1-2星）] ),
+    SUM ( 'monthly_kpis_zh'[评论数] )
+)
+
+// 5. 客户复购（用州表的客户数加权，避免月度表重复计数）
+核心_复购客户率 =
+DIVIDE (
+    SUMX (
+        'state_kpis_zh',
+        'state_kpis_zh'[复购客户率] * 'state_kpis_zh'[客户数]
+    ),
+    SUM ( 'state_kpis_zh'[客户数] )
+)
+
+// 6. 支付/对账（如果导入 payment_reconciliation_zh，可选）
+// 核心_支付匹配率 = AVERAGE ( 'payment_reconciliation_zh'[支付匹配率] )
+// 核心_支付差额 = SUM ( 'payment_reconciliation_zh'[支付差额合计] )
+
+// 7. 动态标题（可选；如果月份列是日期型，请改用 FORMAT）
+核心_月度标题 =
+"月度 GMV 与有效订单｜" &
+MIN ( 'monthly_kpis_zh'[月份] ) &
+" 至 " &
+MAX ( 'monthly_kpis_zh'[月份] )

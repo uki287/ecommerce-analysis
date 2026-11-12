@@ -1,0 +1,77 @@
+// ============================================================
+// 可选：完整版订单事实表度量值
+// 仅当你的模型导入了 orders_master_zh（订单级）时使用。
+// 快速版（8 张原生图）不需要这些度量值。
+// ============================================================
+
+有效订单数_明细 =
+CALCULATE (
+    COUNTROWS ( 'orders_master_zh' ),
+    'orders_master_zh'[是否有效订单] = "是"
+)
+
+商品GMV_明细 =
+CALCULATE (
+    SUM ( 'orders_master_zh'[商品GMV] ),
+    'orders_master_zh'[是否有效订单] = "是"
+)
+
+含运费订单总额_明细 =
+CALCULATE (
+    SUM ( 'orders_master_zh'[含运费订单总额] ),
+    'orders_master_zh'[是否有效订单] = "是"
+)
+
+客单价_明细 =
+DIVIDE ( [含运费订单总额_明细], [有效订单数_明细] )
+
+迟到率_明细 =
+DIVIDE (
+    CALCULATE (
+        COUNTROWS ( 'orders_master_zh' ),
+        'orders_master_zh'[是否迟到] = "是",
+        NOT ISBLANK ( 'orders_master_zh'[送达天数] )
+    ),
+    CALCULATE (
+        COUNTROWS ( 'orders_master_zh' ),
+        'orders_master_zh'[是否送达] = "是",
+        NOT ISBLANK ( 'orders_master_zh'[送达天数] )
+    )
+)
+
+平均评论分_明细 =
+CALCULATE (
+    AVERAGE ( 'orders_master_zh'[评论分] ),
+    'orders_master_zh'[是否有效订单] = "是"
+)
+
+客户数_明细 =
+CALCULATE (
+    DISTINCTCOUNT ( 'orders_master_zh'[客户唯一ID] ),
+    'orders_master_zh'[是否有效订单] = "是"
+)
+
+复购客户数_明细 =
+COUNTROWS (
+    FILTER (
+        ADDCOLUMNS (
+            VALUES ( 'orders_master_zh'[客户唯一ID] ),
+            "@订单数", CALCULATE (
+                COUNTROWS ( 'orders_master_zh' ),
+                'orders_master_zh'[是否有效订单] = "是"
+            )
+        ),
+        [@订单数] > 1
+    )
+)
+
+复购客户率_明细 =
+DIVIDE ( [复购客户数_明细], [客户数_明细] )
+
+// 时间序列：需要先把 orders_master_zh[下单日期] 设为日期类型，
+// 并建立日期表[Date] → orders_master_zh[下单日期] 的关系。
+月度GMV_明细 =
+CALCULATE ( [商品GMV_明细], VALUES ( '日期表'[月份] ) )
+
+月度订单数_明细 =
+CALCULATE ( [有效订单数_明细], VALUES ( '日期表'[月份] ) )

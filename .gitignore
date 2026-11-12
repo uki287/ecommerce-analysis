@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Raw dataset (~120 MB) — download from Kaggle, never commit
+Brazilian-Data/
+data/raw/
+
+# Generated outputs — rebuild with `python src/run_analysis.py`
+data/processed/
+data/processed_zh/
+report/tables/
+report/tables_zh/
+report/*.xlsx
+report/*.log
+report/run_manifest.json
+
+# Personal drafts, not for publication
+docs/_private/
+
+# OS / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,38 @@
+// ============================================================
+// 可选：SVG KPI 卡（不是原生图表）
+// 需要 HTML Content 自定义视觉对象，或表格/矩阵的图片渲染。
+// 如果租户不允许自定义视觉对象，请不要用本文件，直接用原生卡片图。
+// ============================================================
+
+// 用法：新建度量值；在 HTML Content 视觉对象的 Values 中放入该度量值。
+// 颜色使用 %23 代替 #；中文使用 Microsoft YaHei。
+KPI_SVG_有效订单数 =
+VAR v = FORMAT ( [核心_有效订单数], "#,##0" )
+RETURN
+    "data:image/svg+xml;utf8," &
+    "<svg xmlns='http://www.w3.org/2000/svg' width='260' height='120'>" &
+    "<rect x='0' y='0' width='260' height='120' rx='8' fill='%23FFFFFF'/>" &
+    "<text x='18' y='34' font-family='Microsoft YaHei' font-size='13' fill='%236B7280'>有效订单数</text>" &
+    "<text x='18' y='82' font-family='Microsoft YaHei' font-size='34' font-weight='700' fill='%231F4E79'>" &
+    v &
+    "</text>" &
+    "</svg>"
+
+// 第二个示例：GMV KPI（单位百万雷亚尔）
+KPI_SVG_商品GMV =
+VAR v = FORMAT ( [核心_商品GMV] / 1000000, "0.00" )
+RETURN
+    "data:image/svg+xml;utf8," &
+    "<svg xmlns='http://www.w3.org/2000/svg' width='260' height='120'>" &
+    "<rect x='0' y='0' width='260' height='120' rx='8' fill='%23FFFFFF'/>" &
+    "<text x='18' y='34' font-family='Microsoft YaHei' font-size='13' fill='%236B7280'>商品 GMV（百万雷亚尔）</text>" &
+    "<text x='18' y='82' font-family='Microsoft YaHei' font-size='34' font-weight='700' fill='%231F4E79'>R$ " &
+    v &
+    "M</text>" &
+    "</svg>"
+
+// 注意：
+// 1) SVG 度量值不能直接放进“卡片图”；卡片图只认数值。
+// 2) 表格/矩阵中若要显示为图片，需要把该列的“数据类别”设为 Image URL。
+// 3) 动态 SVG 的性能不如原生视觉对象，不建议 10 张图都用 SVG。
+// 4) 本包主路线仍然是 8 张原生图 + 2 张 PNG。

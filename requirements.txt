@@ -1,0 +1,7 @@
+# Runtime dependencies for the analysis pipeline.
+# Charts are intentionally not included; add matplotlib/plotly only when you
+# start building them.
+pandas>=2.2,<4
+numpy>=1.26
+openpyxl>=3.1
+XlsxWriter>=3.2
