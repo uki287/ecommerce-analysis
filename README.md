@@ -4,8 +4,6 @@
 
 ![10 张图表预览](docs/images/charts_contact_sheet.png)
 
-![州级地图看板](docs/images/dashboard_state_map.png)
-
 ## 项目亮点
 
 - **不是画图练习**：代码只做清洗和指标，图表与看板是下游消费者，口径文档随代码一起交付；
